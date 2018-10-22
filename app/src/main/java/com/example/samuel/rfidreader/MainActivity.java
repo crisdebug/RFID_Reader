@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final Pattern RFID_KEYCODE = Pattern.compile("KEYCODE_(\\d)");
-    TextView rfidCode;
+    TextView mensagem;
     StringBuilder sb;
     boolean executed;
 
@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rfidCode = findViewById(R.id.rfid_number);
-        rfidCode.setText("");
+        mensagem = findViewById(R.id.mensagem);
         sb = new StringBuilder();
         executed = false;
     }
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         String key = KeyEvent.keyCodeToString(keyCode);
 
         if (executed) {
-            rfidCode.setText("");
+            mensagem.setText("");
         } else {
             executed = false;
 
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         Matcher matcher = RFID_KEYCODE.matcher(key);
 
         if (matcher.matches()) {
-            rfidCode.append(matcher.group(1));
+            mensagem.append(matcher.group(1));
             sb.append(matcher.group(1));
         }
 
@@ -72,17 +71,7 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<RFIDJson>() {
                 @Override
                 public void onResponse(Call<RFIDJson> call, Response<RFIDJson> response) {
-                    if (!response.isSuccessful()) {
-                        Toast.makeText(MainActivity.this, "ERRO", Toast.LENGTH_LONG).show();
-                        sb = new StringBuilder();
-                    } else {
-                        /*String value1 = response.body().getValue1();
-                        String value2 = response.body().getValue2();
-                        String value3 = response.body().getValue3();
-                        Toast.makeText(MainActivity.this, "Value1:"+value1+" Value2:"+value2+" Value3:"+value3, Toast.LENGTH_LONG).show();*/
-                        Log.e("ERRO", "SUCESSO");
-                        sb = new StringBuilder();
-                    }
+
                 }
 
                 @Override
