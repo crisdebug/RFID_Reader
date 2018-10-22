@@ -7,6 +7,8 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.samuel.rfidreader.database.RfidDAO;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,34 +57,40 @@ public class MainActivity extends AppCompatActivity {
 
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
             String code = sb.toString();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://maker.ifttt.com/trigger/rfid_passed/with/key/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            RfidDAO rfidDAO = RfidDAO.getInstance(this);
+            rfidDAO.open();
+            Funcionario funcionario = rfidDAO.getFuncionario(code);
+            if(funcionario != null) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://maker.ifttt.com/trigger/rfid_passed/with/key/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-            ApiInterface api = retrofit.create(ApiInterface.class);
+                ApiInterface api = retrofit.create(ApiInterface.class);
 
-            RFIDJson json = new RFIDJson();
-            json.setValue1(code);
-            json.setValue2("");
-            json.setValue3("");
-            Call<RFIDJson> call = api.enviarCode(json);
+                RFIDJson json = new RFIDJson();
+                json.setValue1(code);
+                json.setValue2(funcionario.getNome());
+                funcionario.setEntrou(!funcionario.isEntrou());
+                json.setValue3(funcionario.isEntrou() ? "SAIU" : "ENTROU");
+                Call<RFIDJson> call = api.enviarCode(json);
 
-            call.enqueue(new Callback<RFIDJson>() {
-                @Override
-                public void onResponse(Call<RFIDJson> call, Response<RFIDJson> response) {
+                call.enqueue(new Callback<RFIDJson>() {
+                    @Override
+                    public void onResponse(Call<RFIDJson> call, Response<RFIDJson> response) {
 
-                }
+                    }
 
-                @Override
-                public void onFailure(Call<RFIDJson> call, Throwable t) {
-                    t.printStackTrace();
-                    Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.e("ERRO", t.getMessage());
-                    sb = new StringBuilder();
-                }
-            });
-            executed = true;
+                    @Override
+                    public void onFailure(Call<RFIDJson> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e("ERRO", t.getMessage());
+                        sb = new StringBuilder();
+                    }
+                });
+                executed = true;
+            }
         }
 
 
