@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         String key = KeyEvent.keyCodeToString(keyCode);
 
         if (executed) {
-            mensagem.setText("");
+            sb = new StringBuilder();
         } else {
             executed = false;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Matcher matcher = RFID_KEYCODE.matcher(key);
 
         if (matcher.matches()) {
-            mensagem.append(matcher.group(1));
+
             sb.append(matcher.group(1));
         }
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             Funcionario funcionario = rfidDAO.getFuncionario(code);
             if(funcionario != null) {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://maker.ifttt.com/trigger/rfid_passed/with/key/")
+                        .baseUrl("https://maker.ifttt.com/trigger/rfid_passed_teste/with/key/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 json.setValue1(code);
                 json.setValue2(funcionario.getNome());
                 funcionario.setEntrou(!funcionario.isEntrou());
+                rfidDAO.updateFuncionario(funcionario);
                 json.setValue3(funcionario.isEntrou() ? "SAIU" : "ENTROU");
                 Call<RFIDJson> call = api.enviarCode(json);
 
@@ -83,10 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<RFIDJson> call, Throwable t) {
-                        t.printStackTrace();
-                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.e("ERRO", t.getMessage());
-                        sb = new StringBuilder();
                     }
                 });
                 executed = true;

@@ -1,5 +1,6 @@
 package com.example.samuel.rfidreader.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,5 +50,13 @@ public class RfidDAO {
         return funcionario;
     }
 
+    public void updateFuncionario(Funcionario funcionario){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseOpenHelper.COLUMN_NAME, funcionario.getNome());
+        values.put(DatabaseOpenHelper.COLUMN_CODE, funcionario.getCode());
+        values.put(DatabaseOpenHelper.COLUMN_ENTERED, funcionario.isEntrou() ? "0" : "1");
+
+        database.update("Funcionario", values, DatabaseOpenHelper.COLUMN_ID+"= ?",new String[]{String.valueOf(funcionario.getId())} );
+    }
 
 }
