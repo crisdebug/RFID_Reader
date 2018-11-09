@@ -1,4 +1,4 @@
-package com.example.samuel.rfidreader;
+package com.example.samuel.rfidreader.api;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

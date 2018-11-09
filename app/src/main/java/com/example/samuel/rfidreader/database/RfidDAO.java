@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.samuel.rfidreader.Funcionario;
-
 public class RfidDAO {
 
     private SQLiteOpenHelper openHelper;
@@ -42,7 +40,7 @@ public class RfidDAO {
         if(cursor.moveToFirst()){
             funcionario.setId(cursor.getLong(cursor.getColumnIndex(DatabaseOpenHelper.COLUMN_ID)));
             funcionario.setCode(cursor.getString(cursor.getColumnIndex(DatabaseOpenHelper.COLUMN_CODE)));
-            funcionario.setEntrou(cursor.getInt(cursor.getColumnIndex(DatabaseOpenHelper.COLUMN_ENTERED)) == 1);
+            funcionario.setEntrou(cursor.getInt(cursor.getColumnIndex(DatabaseOpenHelper.COLUMN_ENTERED)) == 0);
             funcionario.setNome(cursor.getString(cursor.getColumnIndex(DatabaseOpenHelper.COLUMN_NAME)));
         }else{
             funcionario = null;

@@ -1,4 +1,4 @@
-package com.example.samuel.rfidreader;
+package com.example.samuel.rfidreader.api;
 
 public class RFIDJson {
   String value1, value2, value3;

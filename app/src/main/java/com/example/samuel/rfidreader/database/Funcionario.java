@@ -1,4 +1,4 @@
-package com.example.samuel.rfidreader;
+package com.example.samuel.rfidreader.database;
 
 public class Funcionario {
     private long id;
